@@ -1,19 +1,15 @@
-/* For the power calculation Pzem 0004t module v3.0, Library link : https://github.com/4-20ma/ModbusMaster  */
 #include <MasterPZEM.h>
 #include <SoftwareSerial.h> 
  
 SoftwareSerial pzemSerial(10,11); //rx, tx
 MasterPZEM node;
 static uint8_t pzemSlaveAddr = 0x01;
-#define LEDPIN 13 
  
 void setup() {
   pzemSerial.begin(9600); 
   Serial.begin(9600);
   //resetEnergy(pzemSlaveAddr);
   node.begin(pzemSlaveAddr, pzemSerial);
-  pinMode(13, OUTPUT);
-  digitalWrite(LEDPIN,0);
 }
  
 /* 
@@ -32,9 +28,7 @@ RegAddr Description                 Resolution
  
 void loop() {
   uint8_t result;
-  digitalWrite(LEDPIN,1);
   result = node.readInputRegisters(0x0000, 9); //read the 9 registers of the PZEM-014 / 016
-  digitalWrite(LEDPIN,0);
   if (result == node.ku8MBSuccess)
   {
     float voltage = node.getResponseBuffer(0x0000) / 10.0;
